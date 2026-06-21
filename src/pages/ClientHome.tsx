@@ -133,7 +133,7 @@ export default function ClientHome() {
               transition={{ duration: 0.8, type: "spring", bounce: 0.5 }}
               className="w-56 h-56 rounded-full shadow-[0_0_80px_rgba(255,184,0,0.4)] flex items-center justify-center p-2 mb-6 bg-black border border-yellow-500/20"
             >
-               <img src="/img/logo/logook.jfif" alt="TopeDeBar Logo" className="w-full h-full object-contain rounded-full" onError={(e) => {
+               <img src="/img/logo/logo/logook.jfif" alt="TopeDeBar Logo" className="w-full h-full object-contain rounded-full" onError={(e) => {
                  e.currentTarget.style.display = 'none';
                  if (e.currentTarget.nextElementSibling) {
                    (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'block';
@@ -216,7 +216,7 @@ export default function ClientHome() {
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">
              <div className="w-14 h-14 bg-black rounded-full border border-primary/30 flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden">
-                <img src="/img/logo/logook.jfif" alt="Logo" className="w-full h-full object-cover" onError={(e) => {
+                <img src="/img/logo/logo/logook.jfif" alt="Logo" className="w-full h-full object-cover" onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   if (e.currentTarget.nextElementSibling) {
                     (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'block';
