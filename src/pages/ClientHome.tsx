@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ShoppingCart, Search, Info, MapPin, Plus, Star, ChevronRight, RotateCcw } from 'lucide-react';
 import { useCart } from '../lib/CartContext';
 import CartModal from '../components/client/CartModal';
 import ProductModal from '../components/client/ProductModal';
+import OrderTrackerModal from '../components/client/OrderTrackerModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Empresa {
@@ -34,7 +35,7 @@ interface Product {
 interface Banner {
   id: string;
   image_url: string;
-  link_url?: string;
+  link?: string;
 }
 
 export default function ClientHome() {
@@ -49,6 +50,8 @@ export default function ClientHome() {
   const [showSplash, setShowSplash] = useState(true);
   
   const [lastOrder, setLastOrder] = useState<any[]>([]);
+  const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
+  const [isTrackerOpen, setIsTrackerOpen] = useState(false);
 
   // UI States
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,7 +61,7 @@ export default function ClientHome() {
   const { items, setIsCartOpen, addToCart, clearCart } = useCart();
   const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const carouselRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     async function loadData() {
@@ -84,6 +87,12 @@ export default function ClientHome() {
           } catch(e) {}
         }
 
+        // Check for active order tracking
+        const activeOrder = localStorage.getItem(`activeOrder_${empData.id}`);
+        if (activeOrder) {
+          setActiveOrderId(activeOrder);
+        }
+
         const [cats, prods, bans] = await Promise.all([
           supabase.from('categories').select('*').eq('empresa_id', empData.id),
           supabase.from('products').select('*').eq('empresa_id', empData.id).eq('is_active', true),
@@ -104,23 +113,7 @@ export default function ClientHome() {
     loadData();
   }, [empresaSlug]);
 
-  // Auto-scroll Banners
-  useEffect(() => {
-    if (!carouselRef.current || banners.length <= 1) return;
-    const interval = setInterval(() => {
-      if (carouselRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-        const maxScroll = scrollWidth - clientWidth;
-        // Si llegó al final, vuelve al inicio, sino avanza 1 tarjeta (aprox 320px)
-        if (scrollLeft >= maxScroll - 10) {
-          carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          carouselRef.current.scrollBy({ left: 320, behavior: 'smooth' });
-        }
-      }
-    }, 4000); // Rota cada 4 segundos
-    return () => clearInterval(interval);
-  }, [banners]);
+
 
   if (loading || showSplash) {
     return (
@@ -251,6 +244,25 @@ export default function ClientHome() {
             className="w-full bg-black/50 border border-slate-700 text-white rounded-2xl py-3 pl-12 pr-4 shadow-inner outline-none focus:border-primary transition-all text-sm placeholder:text-slate-500"
           />
         </div>
+
+        {/* Active Order Tracker Button */}
+        {activeOrderId && !searchQuery && (
+          <motion.button 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            onClick={() => setIsTrackerOpen(true)}
+            className="w-full mt-4 bg-primary/20 border border-primary text-primary py-3 px-4 rounded-xl flex items-center justify-between font-bold text-sm shadow-[0_0_15px_rgba(255,184,0,0.2)] animate-pulse"
+          >
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-3 w-3 mr-1">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+              </span>
+              Sigue tu pedido en vivo
+            </div>
+            <ChevronRight size={18} />
+          </motion.button>
+        )}
       </header>
 
       <main className="mt-2">
@@ -275,26 +287,39 @@ export default function ClientHome() {
           </section>
         )}
 
-        {/* 2. BANNERS CAROUSEL (Auto-scrolling) */}
+        {/* 2. BANNERS CAROUSEL (Infinite Motion Marquee) */}
         {!searchQuery && (
-          <section className="px-4 py-4">
-            <div ref={carouselRef} className="flex overflow-x-auto hide-scrollbar gap-3 snap-x snap-mandatory">
-              {displayBanners.map(banner => (
-                <a 
-                  key={banner.id} 
-                  href={banner.link_url || '#'} 
-                  className="shrink-0 w-[85vw] md:w-80 h-44 rounded-3xl overflow-hidden snap-center relative border border-slate-800 shadow-xl block"
-                >
-                  <img src={banner.image_url} alt="Promo" className="w-full h-full object-cover opacity-80" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                  {banner.link_url && (
-                    <div className="absolute bottom-4 left-4 bg-primary text-black text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-lg shadow-primary/30">
-                      Ver más <ChevronRight size={14} />
-                    </div>
-                  )}
-                </a>
-              ))}
-            </div>
+          <section className="py-4 overflow-hidden">
+            <motion.div 
+              className="flex gap-4 w-max px-4"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, ease: "linear", duration: displayBanners.length * 5 }}
+            >
+              {[...displayBanners, ...displayBanners].map((banner, idx) => {
+                const isFixed = banner.image_url.includes('bannertupedido.png');
+                return (
+                  <a 
+                    key={`${banner.id}-${idx}`} 
+                    href={banner.link || '#'} 
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 w-72 md:w-80 h-40 rounded-3xl overflow-hidden relative border border-slate-800 shadow-xl block bg-black"
+                  >
+                    <img 
+                      src={banner.image_url} 
+                      alt="Promo" 
+                      className={`w-full h-full ${isFixed ? 'object-contain' : 'object-cover opacity-80'}`} 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    {banner.link && (
+                      <div className="absolute bottom-4 left-4 bg-primary text-black text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-lg shadow-primary/30">
+                        Ver más <ChevronRight size={14} />
+                      </div>
+                    )}
+                  </a>
+                );
+              })}
+            </motion.div>
           </section>
         )}
 
@@ -466,6 +491,20 @@ export default function ClientHome() {
         empresaId={empresa.id} 
         empresaName={empresa.name} 
         empresaPhone={empresa.phone} 
+        onOrderPlaced={(id) => {
+          setActiveOrderId(id);
+          setIsTrackerOpen(true); // Open it immediately to surprise the user
+        }}
+      />
+
+      <OrderTrackerModal 
+        orderId={activeOrderId}
+        isOpen={isTrackerOpen}
+        onClose={() => setIsTrackerOpen(false)}
+        onClearActiveOrder={() => {
+          localStorage.removeItem(`activeOrder_${empresa.id}`);
+          setActiveOrderId(null);
+        }}
       />
     </div>
   );

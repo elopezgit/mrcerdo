@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, Edit2 } from 'lucide-react';
 
 interface Banner {
   id: string;
   image_url: string;
-  link_url: string;
+  link?: string;
   is_active: boolean;
 }
 
@@ -13,7 +13,8 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
   const [empresaId, setEmpresaId] = useState<string | null>(null);
   const [banners, setBanners] = useState<Banner[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ image_url: '', link_url: '' });
+  const [editingBanner, setEditingBanner] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ image_url: '', link: '' });
 
   useEffect(() => {
     async function init() {
@@ -35,20 +36,44 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
     e.preventDefault();
     if (!empresaId) return;
 
-    const { error } = await supabase.from('banners').insert({
-      empresa_id: empresaId,
-      image_url: formData.image_url,
-      link_url: formData.link_url || null,
-      is_active: true
-    });
+    let error;
+
+    if (editingBanner) {
+      const { error: updateError } = await supabase.from('banners').update({
+        image_url: formData.image_url,
+        link: formData.link || null
+      }).eq('id', editingBanner);
+      error = updateError;
+    } else {
+      const { error: insertError } = await supabase.from('banners').insert({
+        empresa_id: empresaId,
+        image_url: formData.image_url,
+        link: formData.link || null,
+        is_active: true
+      });
+      error = insertError;
+    }
 
     if (!error) {
       setIsModalOpen(false);
-      setFormData({ image_url: '', link_url: '' });
+      setEditingBanner(null);
+      setFormData({ image_url: '', link: '' });
       fetchBanners(empresaId);
     } else {
       alert("Error al guardar: " + error.message);
     }
+  };
+
+  const openNewModal = () => {
+    setEditingBanner(null);
+    setFormData({ image_url: '', link: '' });
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (banner: Banner) => {
+    setEditingBanner(banner.id);
+    setFormData({ image_url: banner.image_url, link: banner.link || '' });
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
@@ -67,7 +92,7 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
           <p className="text-slate-500 mt-1">Administra los banners promocionales de tu catálogo.</p>
         </div>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={openNewModal}
           className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg shadow-sm font-medium transition-colors flex items-center gap-2"
         >
           <Plus size={20} />
@@ -76,21 +101,34 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
       </header>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {banners.map(banner => (
-          <div key={banner.id} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-            <div className="h-48 bg-slate-100 relative">
-              <img src={banner.image_url} alt="Banner" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400?text=Error+de+Imagen'; }} />
-            </div>
-            <div className="p-4 flex justify-between items-center bg-slate-50 border-t border-slate-100">
-              <div className="text-sm text-slate-500 truncate mr-4">
-                {banner.link_url ? `Link: ${banner.link_url}` : 'Sin enlace'}
+        {banners.map(banner => {
+          const isFixed = banner.image_url.includes('bannertupedido.png');
+          return (
+            <div key={banner.id} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+              <div className="h-48 bg-slate-100 relative">
+                <img src={banner.image_url} alt="Banner" className={`w-full h-full ${isFixed ? 'object-contain bg-black' : 'object-cover'}`} onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400?text=Error+de+Imagen'; }} />
               </div>
-              <button onClick={() => handleDelete(banner.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                <Trash2 size={18} />
-              </button>
+              <div className="p-4 flex justify-between items-center bg-slate-50 border-t border-slate-100">
+                <div className="text-sm text-slate-500 truncate mr-4">
+                  {banner.link ? `Link: ${banner.link}` : 'Sin enlace'}
+                </div>
+                {!isFixed && (
+                  <div className="flex gap-2">
+                    <button onClick={() => handleEdit(banner)} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">
+                      <Edit2 size={18} />
+                    </button>
+                    <button onClick={() => handleDelete(banner.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                )}
+                {isFixed && (
+                  <span className="text-xs font-bold text-slate-400 bg-slate-200 px-2 py-1 rounded">Fijo</span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {banners.length === 0 && (
           <div className="col-span-full p-12 text-center bg-white rounded-xl border border-dashed border-slate-300 text-slate-500">
             No tienes banners configurados. Añade uno nuevo para destacarlo en tu catálogo.
@@ -101,7 +139,7 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-            <h3 className="text-xl font-bold mb-4">Agregar Banner</h3>
+            <h3 className="text-xl font-bold mb-4">{editingBanner ? 'Editar Banner' : 'Agregar Banner'}</h3>
             <form onSubmit={handleSave} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">URL de la Imagen</label>
@@ -110,7 +148,7 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">URL de Destino (Opcional)</label>
-                <input type="url" placeholder="https://..." value={formData.link_url} onChange={e => setFormData({...formData, link_url: e.target.value})} className="w-full p-2 border border-slate-200 rounded-lg" />
+                <input type="url" placeholder="https://..." value={formData.link} onChange={e => setFormData({...formData, link: e.target.value})} className="w-full p-2 border border-slate-200 rounded-lg" />
                 <p className="text-xs text-slate-500 mt-1">A dónde irá el cliente si hace clic en el banner.</p>
               </div>
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">

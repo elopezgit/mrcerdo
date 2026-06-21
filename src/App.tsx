@@ -16,7 +16,11 @@ function App() {
             <ClientHome />
           </CartProvider>
         } />
-        <Route path="/admin/:empresaSlug" element={<AdminDashboard />} />
+        <Route path="/admin/:empresaSlug" element={
+          <CartProvider>
+            <AdminDashboard />
+          </CartProvider>
+        } />
       </Routes>
     </BrowserRouter>
   );

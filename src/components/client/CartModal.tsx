@@ -8,9 +8,10 @@ interface CartModalProps {
   empresaId: string;
   empresaName: string;
   empresaPhone: string;
+  onOrderPlaced?: (orderId: string) => void;
 }
 
-export default function CartModal({ empresaId, empresaName, empresaPhone }: CartModalProps) {
+export default function CartModal({ empresaId, empresaName, empresaPhone, onOrderPlaced }: CartModalProps) {
   const { isCartOpen, setIsCartOpen, items, updateQuantity, removeFromCart, total, clearCart } = useCart();
   
   const [customerName, setCustomerName] = useState('');
@@ -72,6 +73,10 @@ export default function CartModal({ empresaId, empresaName, empresaPhone }: Cart
 
       // Save order to localStorage for the "Reorder" feature
       localStorage.setItem(`lastOrder_${empresaId}`, JSON.stringify(items));
+      // Save order id for Tracking feature
+      localStorage.setItem(`activeOrder_${empresaId}`, orderData.id);
+      
+      if (onOrderPlaced) onOrderPlaced(orderData.id);
 
       clearCart();
       setIsCartOpen(false);

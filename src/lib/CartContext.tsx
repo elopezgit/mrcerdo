@@ -13,6 +13,7 @@ interface CartContextType {
   addToCart: (product: { id: string; name: string; price: number }, quantity?: number, notes?: string) => void;
   removeFromCart: (id: string, notes?: string) => void;
   updateQuantity: (id: string, quantity: number, notes?: string) => void;
+  updateItemNotes: (id: string, oldNotes: string | undefined, newNotes: string) => void;
   clearCart: () => void;
   total: number;
   isCartOpen: boolean;
@@ -61,6 +62,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const updateItemNotes = (id: string, oldNotes: string | undefined, newNotes: string) => {
+    setItems(prev => prev.map(item => {
+      const itemKey = item.notes ? `${item.id}-${item.notes}` : item.id;
+      const targetKey = oldNotes ? `${id}-${oldNotes}` : id;
+      return itemKey === targetKey ? { ...item, notes: newNotes } : item;
+    }));
+  };
+
   const clearCart = () => {
     setItems([]);
   };
@@ -73,6 +82,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       addToCart,
       removeFromCart,
       updateQuantity,
+      updateItemNotes,
       clearCart,
       total,
       isCartOpen,

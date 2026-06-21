@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { ExternalLink } from 'lucide-react';
+import OrderDetailModal from './OrderDetailModal';
 
 interface Order {
   id: string;
@@ -24,6 +26,7 @@ const COLUMNS = [
 export default function KanbanBoard({ empresaSlug }: { empresaSlug: string }) {
   const [empresaId, setEmpresaId] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     async function init() {
@@ -36,6 +39,17 @@ export default function KanbanBoard({ empresaSlug }: { empresaSlug: string }) {
     init();
   }, [empresaSlug]);
 
+  // Auto-refresh cada 2 minutos
+  useEffect(() => {
+    if (!empresaId) return;
+    
+    const interval = setInterval(() => {
+      fetchOrders(empresaId);
+    }, 120000);
+
+    return () => clearInterval(interval);
+  }, [empresaId]);
+
   const fetchOrders = async (id: string) => {
     const { data } = await supabase
       .from('orders')
@@ -43,6 +57,10 @@ export default function KanbanBoard({ empresaSlug }: { empresaSlug: string }) {
       .eq('empresa_id', id)
       .order('created_at', { ascending: false });
     if (data) setOrders(data);
+  };
+
+  const updateOrderStatus = (orderId: string, newStatus: string) => {
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
   };
 
   const onDragEnd = async (result: DropResult) => {
@@ -102,7 +120,8 @@ export default function KanbanBoard({ empresaSlug }: { empresaSlug: string }) {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className={`bg-white p-4 rounded-xl shadow-sm border ${snapshot.isDragging ? 'border-primary shadow-lg ring-2 ring-primary/20' : 'border-slate-200'}`}
+                                className={`group bg-white p-4 rounded-xl shadow-sm border cursor-pointer hover:shadow-md hover:border-primary transition-all ${snapshot.isDragging ? 'shadow-lg ring-2 ring-primary/20' : 'border-slate-200'}`}
+                                onClick={() => setSelectedOrder(order)}
                               >
                                 <div className="flex justify-between items-start mb-2">
                                   <span className="text-xs font-mono text-slate-400">#{order.id.split('-')[0].toUpperCase()}</span>
@@ -154,6 +173,14 @@ export default function KanbanBoard({ empresaSlug }: { empresaSlug: string }) {
           </div>
         </DragDropContext>
       </div>
+
+      {selectedOrder && (
+        <OrderDetailModal 
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+          onStatusChange={updateOrderStatus}
+        />
+      )}
     </div>
   );
 }
