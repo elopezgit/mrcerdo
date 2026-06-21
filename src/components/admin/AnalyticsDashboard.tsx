@@ -30,7 +30,9 @@ export default function AnalyticsDashboard({ empresaSlug }: { empresaSlug: strin
   const [empresaId, setEmpresaId] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [prevOrders, setPrevOrders] = useState<Order[]>([]);
-  const [timeFilter, setTimeFilter] = useState<'shift' | 'week' | 'month' | 'all'>('shift');
+  const [timeFilter, setTimeFilter] = useState<'shift' | 'week' | 'month' | 'all' | 'custom'>('shift');
+  const [customStartDate, setCustomStartDate] = useState<string>('');
+  const [customEndDate, setCustomEndDate] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -46,9 +48,10 @@ export default function AnalyticsDashboard({ empresaSlug }: { empresaSlug: strin
 
   useEffect(() => {
     if (empresaId) {
+      if (timeFilter === 'custom' && (!customStartDate || !customEndDate)) return;
       fetchData(empresaId, timeFilter);
     }
-  }, [timeFilter]);
+  }, [timeFilter, customStartDate, customEndDate]);
 
   const fetchData = async (eid: string, filter: string) => {
     setIsLoading(true);
@@ -78,6 +81,19 @@ export default function AnalyticsDashboard({ empresaSlug }: { empresaSlug: strin
       prevEndDate = new Date(startDate);
       prevStartDate = new Date(startDate);
       prevStartDate.setMonth(prevStartDate.getMonth() - 1);
+    } else if (filter === 'custom') {
+      startDate = new Date(customStartDate + 'T00:00:00');
+      let endDate = new Date(customEndDate + 'T23:59:59');
+      
+      let query = supabase.from('orders').select('*').eq('empresa_id', eid).order('created_at', { ascending: false });
+      query = query.gte('created_at', startDate.toISOString()).lte('created_at', endDate.toISOString());
+      
+      const { data: currentData } = await query;
+      if (currentData) setOrders(currentData);
+      
+      setPrevOrders([]);
+      setIsLoading(false);
+      return;
     }
 
     // Fetch Current Period
@@ -183,18 +199,39 @@ export default function AnalyticsDashboard({ empresaSlug }: { empresaSlug: strin
           <p className="text-slate-500 mt-1">Métricas, comparativas y movimientos de {empresaSlug.toUpperCase()}</p>
         </div>
         
-        <div className="flex items-center gap-2 bg-white p-1 rounded-xl shadow-sm border border-slate-200">
-          <Calendar size={18} className="text-slate-400 ml-3" />
-          <select 
-            value={timeFilter} 
-            onChange={(e) => setTimeFilter(e.target.value as any)}
-            className="p-2 bg-transparent text-slate-700 font-medium focus:outline-none cursor-pointer"
-          >
-            <option value="shift">Turno Actual (vs Ayer)</option>
-            <option value="week">Últimos 7 días (vs Semana Anterior)</option>
-            <option value="month">Este Mes (vs Mes Anterior)</option>
-            <option value="all">Histórico Completo</option>
-          </select>
+        <div className="flex flex-col gap-2 items-end">
+          <div className="flex items-center gap-2 bg-white p-1 rounded-xl shadow-sm border border-slate-200">
+            <Calendar size={18} className="text-slate-400 ml-3" />
+            <select 
+              value={timeFilter} 
+              onChange={(e) => setTimeFilter(e.target.value as any)}
+              className="p-2 bg-transparent text-slate-700 font-medium focus:outline-none cursor-pointer"
+            >
+              <option value="shift">Turno Actual (vs Ayer)</option>
+              <option value="week">Últimos 7 días (vs Semana Anterior)</option>
+              <option value="month">Este Mes (vs Mes Anterior)</option>
+              <option value="all">Histórico Completo</option>
+              <option value="custom">Rango Personalizado</option>
+            </select>
+          </div>
+          
+          {timeFilter === 'custom' && (
+            <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-slate-200 text-sm">
+              <input 
+                type="date" 
+                value={customStartDate} 
+                onChange={(e) => setCustomStartDate(e.target.value)}
+                className="bg-transparent text-slate-700 font-medium outline-none"
+              />
+              <span className="text-slate-400">hasta</span>
+              <input 
+                type="date" 
+                value={customEndDate} 
+                onChange={(e) => setCustomEndDate(e.target.value)}
+                className="bg-transparent text-slate-700 font-medium outline-none"
+              />
+            </div>
+          )}
         </div>
       </header>
 
