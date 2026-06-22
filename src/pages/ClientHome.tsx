@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ShoppingCart, Search, Info, MapPin, Plus, Star, ChevronRight, RotateCcw } from 'lucide-react';
@@ -61,7 +61,43 @@ export default function ClientHome() {
   const { items, setIsCartOpen, addToCart, clearCart } = useCart();
   const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const startAutoScroll = () => {
+    if (scrollIntervalRef.current) clearInterval(scrollIntervalRef.current);
+    scrollIntervalRef.current = setInterval(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        const firstChild = scrollRef.current.children[0] as HTMLElement;
+        const cardWidth = firstChild ? firstChild.offsetWidth + 16 : 320; 
+        
+        if (scrollLeft >= maxScroll - 10) {
+          scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          scrollRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
+      }
+    }, 4000);
+  };
+
+  useEffect(() => {
+    startAutoScroll();
+    return () => {
+      if (scrollIntervalRef.current) clearInterval(scrollIntervalRef.current);
+    };
+  }, []);
+
+  const handleTouchStart = () => {
+    if (scrollIntervalRef.current) clearInterval(scrollIntervalRef.current);
+  };
+
+  const handleTouchEnd = () => {
+    setTimeout(() => {
+      startAutoScroll();
+    }, 5000);
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -287,23 +323,27 @@ export default function ClientHome() {
           </section>
         )}
 
-        {/* 2. BANNERS CAROUSEL (Infinite Motion Marquee) */}
+        {/* 2. BANNERS CAROUSEL (Manual & Auto Scroll) */}
         {!searchQuery && (
-          <section className="py-4 overflow-hidden">
-            <motion.div 
-              className="flex gap-4 w-max px-4"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, ease: "linear", duration: displayBanners.length * 5 }}
+          <section className="py-4 overflow-hidden relative group">
+            <div 
+              ref={scrollRef}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              onMouseEnter={handleTouchStart}
+              onMouseLeave={handleTouchEnd}
+              className="flex gap-4 px-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2"
+              style={{ scrollBehavior: 'smooth' }}
             >
-              {[...displayBanners, ...displayBanners].map((banner, idx) => {
+              {displayBanners.map((banner) => {
                 const isFixed = banner.image_url.includes('bannertupedido.png');
                 return (
                   <a 
-                    key={`${banner.id}-${idx}`} 
+                    key={banner.id} 
                     href={banner.link || '#'} 
                     target="_blank"
                     rel="noreferrer"
-                    className="shrink-0 w-72 md:w-80 h-40 rounded-3xl overflow-hidden relative border border-slate-800 shadow-xl block bg-black"
+                    className="shrink-0 w-[85vw] max-w-[320px] md:w-80 h-40 rounded-3xl overflow-hidden relative border border-slate-800 shadow-xl block bg-black snap-center"
                   >
                     <img 
                       src={banner.image_url} 
@@ -319,7 +359,7 @@ export default function ClientHome() {
                   </a>
                 );
               })}
-            </motion.div>
+            </div>
           </section>
         )}
 
