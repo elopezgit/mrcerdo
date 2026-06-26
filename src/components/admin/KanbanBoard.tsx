@@ -23,7 +23,7 @@ const COLUMNS = [
   { id: 'cancelado', title: 'Cancelado' }
 ];
 
-export default function KanbanBoard({ empresaSlug }: { empresaSlug: string }) {
+export default function KanbanBoard({ empresaSlug, role }: { empresaSlug: string, role?: string }) {
   const [empresaId, setEmpresaId] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -201,8 +201,8 @@ export default function KanbanBoard({ empresaSlug }: { empresaSlug: string }) {
           order={selectedOrder}
           onClose={() => setSelectedOrder(null)}
           onStatusChange={updateOrderStatus}
-          onDelete={() => deleteOrder(selectedOrder.id)}
-          onUpdate={(updatedData) => updateOrderData(selectedOrder.id, updatedData)}
+          onDelete={role === 'admin' ? () => deleteOrder(selectedOrder.id) : undefined}
+          onUpdate={role === 'admin' ? (updatedData) => updateOrderData(selectedOrder.id, updatedData) : undefined}
         />
       )}
     </div>
