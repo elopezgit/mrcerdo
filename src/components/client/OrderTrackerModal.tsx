@@ -80,8 +80,8 @@ export default function OrderTrackerModal({ orderId, isOpen, onClose, onClearAct
               ) : status === 'cancelado' ? (
                 <div className="text-center py-8">
                   <XCircle size={64} className="text-red-500 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Pedido Cancelado</h3>
-                  <p className="text-slate-600 text-sm">Tu pedido ha sido cancelado por el restaurante. Por favor contáctate por WhatsApp para más información.</p>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Pedido Cancelado</h3>
+                      <p className="text-slate-600 text-sm">Tu pedido ha sido cancelado. Por favor contáctate por WhatsApp para más información.</p>
                 </div>
               ) : (
                 <div className="relative">
@@ -103,7 +103,7 @@ export default function OrderTrackerModal({ orderId, isOpen, onClose, onClearAct
                     </div>
                     <div className="pt-2">
                       <h4 className={`font-bold text-lg ${status === 'pendiente' || status === 'en_preparacion' || status === 'entregado' ? 'text-slate-900' : 'text-slate-500'}`}>Pendiente</h4>
-                      <p className="text-xs text-slate-600 mt-1">El restaurante está revisando tu orden.</p>
+                      <p className="text-xs text-slate-600 mt-1">Estamos revisando tu pedido.</p>
                     </div>
                   </div>
 
@@ -114,7 +114,7 @@ export default function OrderTrackerModal({ orderId, isOpen, onClose, onClearAct
                     </div>
                     <div className="pt-2">
                       <h4 className={`font-bold text-lg ${status === 'en_preparacion' || status === 'entregado' ? 'text-slate-900' : 'text-slate-500'}`}>En Preparación</h4>
-                      <p className="text-xs text-slate-600 mt-1">¡Tus platos ya están en la cocina!</p>
+                      <p className="text-xs text-slate-600 mt-1">¡Tu pedido ya está siendo preparado!</p>
                     </div>
                   </div>
 

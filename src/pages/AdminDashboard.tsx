@@ -42,9 +42,13 @@ export default function AdminDashboard() {
     setIsLoading(true);
     setLoginError(false);
     
-    // Bypass para roles internos (sin usuario real)
-    if ((username === 'cocina' && password === 'cocina') || (username === 'operador' && password === 'operador')) {
-      const assignedRole = username as 'cocina' | 'operador';
+    // Bypass local / acceso rápido para administración y roles internos
+    if (
+      (username === 'admin' && (password === 'admin' || password === 'admin123' || password === 'titanfuel')) ||
+      (username === 'cocina' && password === 'cocina') || 
+      (username === 'operador' && password === 'operador')
+    ) {
+      const assignedRole = username === 'admin' ? 'admin' : (username as 'cocina' | 'operador');
       setIsAuthenticated(true);
       setRole(assignedRole);
       localStorage.setItem(`admin_role_${empresaSlug}`, assignedRole);
@@ -209,7 +213,7 @@ export default function AdminDashboard() {
           >
             <LogOut size={16} /> Cerrar Sesión
           </button>
-          <p className="text-xs text-slate-500 text-center">TopeDeBar OS v1.1</p>
+          <p className="text-xs text-slate-500 text-center">Suplementos OS v1.0</p>
         </div>
       </aside>
       

@@ -23,7 +23,7 @@ export default function CartModal({ empresaId, empresaName, empresaPhone, onOrde
   const [copied, setCopied] = useState(false);
 
   const handleCopyAlias = () => {
-    navigator.clipboard.writeText('TOPEDE.BAR');
+    navigator.clipboard.writeText('strong.gramlo');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -105,48 +105,48 @@ export default function CartModal({ empresaId, empresaName, empresaPhone, onOrde
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 top-12 md:top-auto md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:max-w-2xl md:h-[85vh] bg-surface z-[101] rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-amber-200"
+            className="fixed bottom-0 left-0 right-0 top-12 md:top-auto md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:max-w-2xl md:h-[85vh] bg-[#13131F] text-white z-[101] rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-red-500/30"
           >
-            <div className="p-5 border-b border-amber-200 flex items-center justify-between bg-surface shrink-0">
-              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                <Receipt size={22} className="text-primary" /> Mi Pedido
+            <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-[#13131F] shrink-0">
+              <h2 className="text-xl font-black text-white flex items-center gap-2 uppercase tracking-wide">
+                <Receipt size={22} className="text-[#FF1E27]" /> Mi Pedido Oficial
               </h2>
               <button 
                 onClick={() => setIsCartOpen(false)}
-                className="p-2 bg-amber-100 text-slate-700 rounded-full hover:bg-slate-700 transition-colors"
+                className="p-2.5 bg-[#181824] text-slate-300 rounded-full border border-slate-700/80 hover:bg-[#FF1E27] hover:text-white transition-colors"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto hide-scrollbar bg-background">
+            <div className="flex-1 overflow-y-auto hide-scrollbar bg-[#0D0D14]">
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full p-8 text-slate-500">
                   <Receipt size={48} className="mb-4 opacity-20" />
-                  <p className="text-lg font-bold">Tu carrito está vacío</p>
-                  <p className="text-sm mt-1">¡Agrega algunos productos deliciosos!</p>
+                  <p className="text-lg font-bold text-white">Tu pedido está vacío</p>
+                  <p className="text-sm mt-1">¡Agrega tus suplementos para continuar!</p>
                 </div>
               ) : (
                 <div className="p-5 space-y-6">
                   {/* Items List */}
-                  <div className="bg-surface rounded-2xl p-4 border border-amber-200 space-y-4">
+                  <div className="bg-[#13131F] rounded-2xl p-4 border border-slate-800 space-y-4">
                     {items.map((item, idx) => (
-                      <div key={idx} className="flex gap-4 items-start border-b border-amber-200 pb-4 last:border-0 last:pb-0">
+                      <div key={idx} className="flex gap-4 items-start border-b border-slate-800/80 pb-4 last:border-0 last:pb-0">
                         <div className="flex-1">
-                          <h4 className="font-bold text-slate-900 text-lg">{item.name}</h4>
-                          {item.notes && <p className="text-xs text-primary mt-1 italic">"{item.notes}"</p>}
-                          <div className="text-slate-700 font-bold mt-1">${(item.price * item.quantity).toLocaleString('es-AR')}</div>
+                          <h4 className="font-bold text-white text-base">{item.name}</h4>
+                          {item.notes && <p className="text-xs text-[#FF1E27] mt-1 italic">"{item.notes}"</p>}
+                          <div className="text-[#FF5C00] font-black mt-1">${(item.price * item.quantity).toLocaleString('es-AR')}</div>
                         </div>
                         <div className="flex flex-col items-end gap-3">
-                          <button onClick={() => removeFromCart(item.id, item.notes)} className="text-slate-500 hover:text-red-500 transition-colors">
+                          <button onClick={() => removeFromCart(item.id, item.notes)} className="text-slate-500 hover:text-[#FF1E27] transition-colors">
                             <Trash2 size={18} />
                           </button>
-                          <div className="flex items-center gap-3 bg-white rounded-full border border-amber-300 p-1">
-                            <button onClick={() => updateQuantity(item.id, item.quantity - 1, item.notes)} className="w-7 h-7 flex items-center justify-center bg-surface rounded-full shadow-sm text-slate-700">
+                          <div className="flex items-center gap-3 bg-[#181824] rounded-xl border border-slate-700/80 p-1">
+                            <button onClick={() => updateQuantity(item.id, item.quantity - 1, item.notes)} className="w-7 h-7 flex items-center justify-center bg-[#242436] rounded-lg shadow-sm text-white">
                               <Minus size={14} />
                             </button>
-                            <span className="font-bold text-sm w-4 text-center text-slate-900">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, item.quantity + 1, item.notes)} className="w-7 h-7 flex items-center justify-center bg-primary rounded-full shadow-sm text-black">
+                            <span className="font-bold text-sm w-4 text-center text-white">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.id, item.quantity + 1, item.notes)} className="w-7 h-7 flex items-center justify-center bg-gradient-to-r from-[#FF1E27] to-[#FF5C00] rounded-lg shadow-sm text-white">
                               <Plus size={14} />
                             </button>
                           </div>
@@ -156,44 +156,44 @@ export default function CartModal({ empresaId, empresaName, empresaPhone, onOrde
                   </div>
 
                   {/* Checkout Form */}
-                  <form id="checkout-form" onSubmit={handleSubmit} className="bg-surface rounded-2xl p-5 border border-amber-200 space-y-4">
-                    <h3 className="font-bold text-slate-900 mb-2 border-b border-amber-200 pb-2">Tus Datos</h3>
+                  <form id="checkout-form" onSubmit={handleSubmit} className="bg-[#13131F] rounded-2xl p-5 border border-slate-800 space-y-4">
+                    <h3 className="font-black text-white uppercase tracking-wide text-sm mb-2 border-b border-slate-800 pb-2">Datos de Envío y Contacto</h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-slate-600 mb-1">Nombre y Apellido</label>
-                        <input required type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} className="w-full bg-white border border-amber-300 rounded-xl p-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary outline-none" placeholder="Juan Pérez" />
+                        <label className="block text-xs font-bold text-slate-400 mb-1">Nombre y Apellido</label>
+                        <input required type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} className="w-full bg-[#181824] border border-slate-700/80 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-[#FF1E27]/30 focus:border-[#FF1E27] outline-none placeholder:text-slate-500" placeholder="Juan Pérez" />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-600 mb-1">Teléfono (WhatsApp)</label>
-                        <input required type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} className="w-full bg-white border border-amber-300 rounded-xl p-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary outline-none" placeholder="381 123 4567" />
+                        <label className="block text-xs font-bold text-slate-400 mb-1">Teléfono (WhatsApp)</label>
+                        <input required type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} className="w-full bg-[#181824] border border-slate-700/80 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-[#FF1E27]/30 focus:border-[#FF1E27] outline-none placeholder:text-slate-500" placeholder="381 123 4567" />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 mb-1 flex items-center gap-1"><MapPin size={14} /> Dirección de Envío</label>
-                      <input type="text" value={deliveryAddress} onChange={e => setDeliveryAddress(e.target.value)} className="w-full bg-white border border-amber-300 rounded-xl p-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary outline-none" placeholder="Calle Falsa 123 (Opcional si retira)" />
+                      <label className="block text-xs font-bold text-slate-400 mb-1 flex items-center gap-1"><MapPin size={14} className="text-[#FF5C00]" /> Dirección de Envío</label>
+                      <input type="text" value={deliveryAddress} onChange={e => setDeliveryAddress(e.target.value)} className="w-full bg-[#181824] border border-slate-700/80 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-[#FF1E27]/30 focus:border-[#FF1E27] outline-none placeholder:text-slate-500" placeholder="Calle Falsa 123 (Opcional si retira)" />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 mb-1">Comentarios Generales</label>
-                      <textarea value={comment} onChange={e => setComment(e.target.value)} className="w-full bg-white border border-amber-300 rounded-xl p-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary outline-none resize-none h-16" placeholder="Ej: Pago con $10000, timbre no funciona, etc." />
+                      <label className="block text-xs font-bold text-slate-400 mb-1">Comentarios Generales</label>
+                      <textarea value={comment} onChange={e => setComment(e.target.value)} className="w-full bg-[#181824] border border-slate-700/80 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-[#FF1E27]/30 focus:border-[#FF1E27] outline-none resize-none h-16 placeholder:text-slate-500" placeholder="Ej: Preferencia de horario, timbre, etc." />
                     </div>
 
-                    <div className="pt-4 border-t border-amber-200">
-                      <label className="block text-xs font-bold text-slate-600 mb-3">Método de Pago</label>
+                    <div className="pt-4 border-t border-slate-800">
+                      <label className="block text-xs font-bold text-slate-400 mb-3">Método de Pago</label>
                       <div className="grid grid-cols-2 gap-3">
                         <button 
                           type="button" 
                           onClick={() => setPaymentMethod('efectivo')}
-                          className={`flex items-center justify-center gap-2 p-3 rounded-xl font-bold text-sm transition-all border ${paymentMethod === 'efectivo' ? 'bg-primary border-primary text-black' : 'bg-white border-amber-300 text-slate-600 hover:bg-amber-100'}`}
+                          className={`flex items-center justify-center gap-2 p-3 rounded-xl font-bold text-sm transition-all border ${paymentMethod === 'efectivo' ? 'bg-gradient-to-r from-[#FF1E27] to-[#FF5C00] border-red-400 text-white shadow-md' : 'bg-[#181824] border-slate-700/80 text-slate-300 hover:border-[#FF1E27]/50'}`}
                         >
                           <Wallet size={18} /> Efectivo
                         </button>
                         <button 
                           type="button" 
                           onClick={() => setPaymentMethod('transferencia')}
-                          className={`flex items-center justify-center gap-2 p-3 rounded-xl font-bold text-sm transition-all border ${paymentMethod === 'transferencia' ? 'bg-primary border-primary text-black' : 'bg-white border-amber-300 text-slate-600 hover:bg-amber-100'}`}
+                          className={`flex items-center justify-center gap-2 p-3 rounded-xl font-bold text-sm transition-all border ${paymentMethod === 'transferencia' ? 'bg-gradient-to-r from-[#FF1E27] to-[#FF5C00] border-red-400 text-white shadow-md' : 'bg-[#181824] border-slate-700/80 text-slate-300 hover:border-[#FF1E27]/50'}`}
                         >
                           <CreditCard size={18} /> Transferencia
                         </button>
@@ -203,24 +203,24 @@ export default function CartModal({ empresaId, empresaName, empresaPhone, onOrde
                         <motion.div 
                           initial={{ opacity: 0, height: 0 }} 
                           animate={{ opacity: 1, height: 'auto' }} 
-                          className="mt-4 overflow-hidden rounded-xl border border-yellow-500/30 bg-yellow-900/10"
+                          className="mt-4 overflow-hidden rounded-xl border border-red-500/40 bg-[#1A1318]"
                         >
-                          <div className="p-3 bg-yellow-500/20 text-yellow-300 text-xs font-bold text-center border-b border-yellow-500/20">
-                            Datos para Transferencia
+                          <div className="p-3 bg-[#FF1E27]/20 text-[#FF1E27] text-xs font-black text-center uppercase tracking-wider border-b border-red-500/30">
+                            ⚡ Datos para Transferencia Bancaria
                           </div>
                           <div className="p-4 flex flex-col gap-2">
-                            <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg border border-yellow-500/20">
-                              <span className="text-xs text-slate-600">Titular</span>
-                              <span className="text-sm font-bold text-slate-900">ADRIÁN R. DÍAZ</span>
+                            <div className="flex justify-between items-center bg-[#14141E] p-3 rounded-lg border border-slate-800">
+                              <span className="text-xs text-slate-400">Titular</span>
+                              <span className="text-sm font-extrabold text-white">TITAN FUEL SUPLEMENTOS</span>
                             </div>
-                            <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg border border-yellow-500/20">
-                              <span className="text-xs text-slate-600">Alias</span>
+                            <div className="flex justify-between items-center bg-[#14141E] p-3 rounded-lg border border-slate-800">
+                              <span className="text-xs text-slate-400">Alias</span>
                               <div className="flex items-center gap-2">
-                                <span className="text-sm font-black text-primary tracking-wider">TOPEDE.BAR</span>
+                                <span className="text-sm font-black text-[#FF5C00] tracking-wider">strong.gramlo</span>
                                 <button
                                   type="button"
                                   onClick={handleCopyAlias}
-                                  className="p-1.5 bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/40 rounded-md transition-colors"
+                                  className="p-1.5 bg-[#FF1E27]/20 text-[#FF1E27] hover:bg-[#FF1E27]/40 rounded-md transition-colors"
                                   title="Copiar Alias"
                                 >
                                   {copied ? <CheckCircle2 size={16} className="text-green-400" /> : <Copy size={16} />}
@@ -228,8 +228,8 @@ export default function CartModal({ empresaId, empresaName, empresaPhone, onOrde
                               </div>
                             </div>
                           </div>
-                          <p className="text-xs text-yellow-500 text-center px-4 pb-4">
-                            Recuerda enviar el comprobante por WhatsApp al finalizar el pedido.
+                          <p className="text-xs text-slate-400 text-center px-4 pb-4">
+                            Al finalizar, se enviará el detalle completo a nuestro WhatsApp oficial para coordinar pago y envío.
                           </p>
                         </motion.div>
                       )}
@@ -241,18 +241,18 @@ export default function CartModal({ empresaId, empresaName, empresaPhone, onOrde
 
             {/* Footer Total & Button */}
             {items.length > 0 && (
-              <div className="p-5 border-t border-amber-200 bg-surface shrink-0">
+              <div className="p-5 border-t border-slate-800 bg-[#13131F] shrink-0">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-slate-600 font-bold">Total a pagar</span>
-                  <span className="text-3xl font-black text-slate-900">${total.toLocaleString('es-AR')}</span>
+                  <span className="text-slate-400 font-bold">Total a pagar</span>
+                  <span className="text-3xl font-black text-white">${total.toLocaleString('es-AR')}</span>
                 </div>
                 <button 
                   type="submit"
                   form="checkout-form"
                   disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-primary-hover text-black py-4 rounded-2xl font-black text-lg shadow-[0_5px_20px_-5px_rgba(255,184,0,0.4)] transition-all active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100 uppercase tracking-wide"
+                  className="w-full bg-gradient-to-r from-[#FF1E27] via-[#DC2626] to-[#FF5C00] hover:brightness-110 text-white py-4 rounded-2xl font-black text-lg shadow-[0_5px_25px_rgba(255,30,39,0.45)] transition-all active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100 uppercase tracking-wide"
                 >
-                  {isSubmitting ? 'Procesando...' : 'Confirmar Pedido'}
+                  {isSubmitting ? 'Procesando...' : '⚡ Confirmar Pedido por WhatsApp'}
                 </button>
               </div>
             )}

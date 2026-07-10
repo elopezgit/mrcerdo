@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { getEmpresaId } from '../../lib/getEmpresa';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { ExternalLink } from 'lucide-react';
 import OrderDetailModal from './OrderDetailModal';
@@ -8,19 +9,23 @@ interface Order {
   id: string;
   customer_name: string;
   customer_phone: string;
-  delivery_address: string;
-  comment: string;
-  total: number;
+  customer_address?: string;
+  delivery_address?: string;
+  total_price?: number;
+  total?: number;
   status: string;
-  items: any[];
   created_at: string;
+  notes?: string;
+  comment?: string;
+  payment_method?: string;
+  items: any[];
 }
 
 const COLUMNS = [
-  { id: 'pendiente', title: 'Pendiente' },
-  { id: 'en_preparacion', title: 'En Preparación' },
-  { id: 'entregado', title: 'Entregado' },
-  { id: 'cancelado', title: 'Cancelado' }
+  { id: 'pendiente', title: 'Nuevos (Pendiente)', color: 'bg-yellow-50 border-yellow-200 text-yellow-800' },
+  { id: 'en_preparacion', title: 'En Cocina / Armado', color: 'bg-blue-50 border-blue-200 text-blue-800' },
+  { id: 'en_camino', title: 'En Delivery', color: 'bg-purple-50 border-purple-200 text-purple-800' },
+  { id: 'entregado', title: 'Finalizados', color: 'bg-green-50 border-green-200 text-green-800' }
 ];
 
 export default function KanbanBoard({ empresaSlug, role }: { empresaSlug: string, role?: string }) {
@@ -30,10 +35,10 @@ export default function KanbanBoard({ empresaSlug, role }: { empresaSlug: string
 
   useEffect(() => {
     async function init() {
-      const { data: empData } = await supabase.from('empresas').select('id').eq('slug', empresaSlug).maybeSingle();
-      if (empData) {
-        setEmpresaId(empData.id);
-        fetchOrders(empData.id);
+      const id = await getEmpresaId(empresaSlug);
+      if (id) {
+        setEmpresaId(id);
+        fetchOrders(id);
       }
     }
     init();

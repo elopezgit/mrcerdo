@@ -2,16 +2,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #FFCC00; /* Amarillo vivo del cartel */
-  --color-primary-hover: #E6B800;
-  --color-secondary: #E63946; /* Rojo/Naranja del sombreado */
-  --color-surface: #FFFFFF; /* Blanco para tarjetas */
-  --color-background: #FFFDF8; /* Fondo cálido muy clarito */
+  --color-primary: #FF1E27; /* Rojo eléctrico Titan Fuel */
+  --color-primary-hover: #E11D48;
+  --color-secondary: #FF5C00; /* Naranja llama de poder */
+  --color-surface: #12121A; /* Superficies metálicas oscuras */
+  --color-surface-card: #181824; /* Tarjetas de producto */
+  --color-background: #0A0A0F; /* Fondo negro obsidiana profundo */
 }
 
 @layer base {
   body {
-    @apply bg-background text-slate-800 font-sans antialiased selection:bg-primary/20 selection:text-slate-900;
+    @apply bg-background text-slate-100 font-sans antialiased selection:bg-primary/30 selection:text-white;
     font-family: 'Outfit', sans-serif;
     overscroll-behavior-y: none; /* Prevents pull-to-refresh bounce on mobile apps */
   }
@@ -19,7 +20,7 @@
   h1, h2, h3, h4, h5, h6, .font-display {
     font-family: 'Russo One', sans-serif;
     letter-spacing: 0.03em;
-    font-weight: 400; /* Russo One only has 400 weight but looks bold */
+    font-weight: 400;
   }
 }
 

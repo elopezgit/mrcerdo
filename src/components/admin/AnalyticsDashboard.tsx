@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { getEmpresaId } from '../../lib/getEmpresa';
 import { TrendingUp, TrendingDown, Clock, CheckCircle2, AlertCircle, Users, Calendar, Activity, Receipt, LayoutList, Trophy, ArrowDownToLine } from 'lucide-react';
 
 interface OrderItem {
   name: string;
   quantity: number;
   price: number;
-  notes?: string;
+  selectedOptions?: string[];
 }
 
 interface Order {
   id: string;
-  customer_name: string;
-  customer_phone: string;
+  created_at: string;
+  total_price?: number;
   total: number;
   status: string;
-  created_at: string;
   items: OrderItem[];
+  payment_method?: string;
+  customer_name: string;
+  customer_phone: string;
 }
 
 interface ClientStats {
@@ -37,10 +40,10 @@ export default function AnalyticsDashboard({ empresaSlug }: { empresaSlug: strin
 
   useEffect(() => {
     async function init() {
-      const { data } = await supabase.from('empresas').select('id').eq('slug', empresaSlug).maybeSingle();
-      if (data) {
-        setEmpresaId(data.id);
-        fetchData(data.id, timeFilter);
+      const id = await getEmpresaId(empresaSlug);
+      if (id) {
+        setEmpresaId(id);
+        fetchData(id, timeFilter);
       }
     }
     init();

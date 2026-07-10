@@ -7,8 +7,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirigir la raíz a un default si es necesario, o mostrar un portal de selección de empresas */}
-        <Route path="/" element={<Navigate to="/topedebar" replace />} />
+        {/* Redirigir la raíz a /titanfuel */}
+        <Route path="/" element={<Navigate to="/titanfuel" replace />} />
         
         {/* Rutas Multi-Tenant (segmentadas por empresa) */}
         <Route path="/:empresaSlug" element={

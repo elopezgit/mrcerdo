@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus } from 'lucide-react';
+import { BrandLogo } from '../../utils/brandLogos';
 
 interface Product {
   id: string;
@@ -37,10 +38,9 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
 
   const getPlaceholder = (name: string) => {
     const n = name.toLowerCase();
-    if (n.includes('hamburguesa') || n.includes('sánguche') || n.includes('milanesa')) return 'Ej: Sin cebolla, extra cheddar, sin tomate...';
-    if (n.includes('pizza')) return 'Ej: Bien cocida, sin aceitunas...';
-    if (n.includes('papas')) return 'Ej: Sin provenzal, aderezos aparte...';
-    if (n.includes('cerveza') || n.includes('coca') || n.includes('vino') || n.includes('gaseosa')) return 'Ej: Bien fría, con vasos extra...';
+    if (n.includes('prote') || n.includes('whey')) return 'Ej: Sabor vainilla, mezclar con agua...';
+    if (n.includes('creatina')) return 'Ej: Micronizada, sin sabor...';
+    if (n.includes('pre') || n.includes('entreno')) return 'Ej: Sin cafeína, dosis recomendada...';
     return 'Ej: Aclaraciones especiales...';
   };
 
@@ -53,7 +53,7 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-white/80 z-[100] backdrop-blur-sm"
+            className="fixed inset-0 bg-black/80 z-[100] backdrop-blur-md"
           />
 
           <motion.div
@@ -61,67 +61,87 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 z-[101] bg-surface rounded-t-3xl overflow-hidden flex flex-col max-h-[90vh] md:max-w-md md:mx-auto md:bottom-4 md:rounded-3xl shadow-2xl border border-amber-200"
+            className="fixed bottom-0 left-0 right-0 z-[101] bg-[#13131F] text-white rounded-t-3xl overflow-hidden flex flex-col max-h-[90vh] md:max-w-md md:mx-auto md:bottom-4 md:rounded-3xl shadow-2xl border border-red-500/30"
           >
-            <div className="relative h-64 bg-slate-900 shrink-0">
+            <div className="relative h-64 bg-black shrink-0">
               <img 
                 src={product.image_url || `https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80`} 
                 alt={product.name}
-                className="w-full h-full object-cover opacity-80"
+                className="w-full h-full object-cover opacity-50"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#13131F] via-black/30 to-transparent"></div>
+              
+              {/* Brand Official Overlay Seal */}
+              <div className="absolute bottom-4 left-6 z-10 flex flex-col items-start gap-1">
+                <BrandLogo 
+                  brand={(() => {
+                    const match = product.name.match(/^\[(.*?)\]/);
+                    return match ? match[1].trim() : 'TITAN FUEL';
+                  })()} 
+                  size="lg" 
+                />
+                <div className="text-[11px] font-extrabold text-[#FF5C00] uppercase tracking-widest pl-1 drop-shadow-md">
+                  ★ 100% ORIGINAL & GARANTIZADO
+                </div>
+              </div>
+
               <button 
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 bg-white/60 text-slate-900 rounded-full backdrop-blur-md hover:bg-white transition-colors"
+                className="absolute top-4 right-4 p-2.5 bg-black/70 text-white rounded-full border border-white/20 backdrop-blur-md hover:bg-[#FF1E27] transition-colors z-20"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto hide-scrollbar p-6 bg-surface">
-              <h2 className="text-2xl font-black text-slate-900 mb-2">{product.name}</h2>
-              <p className="text-slate-600 leading-relaxed mb-6">
-                {product.description || 'Una deliciosa opción preparada con los mejores ingredientes, ideal para compartir o disfrutar a solas.'}
+            <div className="flex-1 overflow-y-auto hide-scrollbar p-6 bg-[#13131F]">
+              <h2 className="text-2xl font-black text-white mb-2 leading-tight">
+                {product.name.replace(/^\[.*?\]\s*/, '').trim()}
+              </h2>
+              <p className="text-slate-300 leading-relaxed mb-6 text-sm">
+                {(product.description || '')
+                  .replace(/Lisa Mayorista \/ Suplementos AR\.?/gi, 'TITAN FUEL SUPLEMENTOS')
+                  .replace(/Suplementos AR\.?/gi, 'TITAN FUEL SUPLEMENTOS') ||
+                  'Producto de alta pureza y calidad garantizada en la línea oficial de TITAN FUEL SUPLEMENTOS.'}
               </p>
 
-              <div className="mb-8">
-                <label className="block text-sm font-bold text-slate-700 mb-2">Instrucciones Especiales</label>
+              <div className="mb-4">
+                <label className="block text-xs font-black uppercase tracking-wider text-[#FF1E27] mb-2">Instrucciones Especiales</label>
                 <textarea 
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={getPlaceholder(product.name)}
-                  className="w-full bg-white border border-amber-300 rounded-xl p-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none h-20"
+                  className="w-full bg-[#181824] border border-slate-700/80 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-[#FF1E27]/30 focus:border-[#FF1E27] outline-none transition-all resize-none h-20 placeholder:text-slate-500"
                 />
               </div>
             </div>
 
-            <div className="p-6 border-t border-amber-200 bg-surface shrink-0">
+            <div className="p-6 border-t border-slate-800 bg-[#13131F] shrink-0">
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4 bg-white rounded-full p-1 border border-amber-300">
+                <div className="flex items-center gap-4 bg-[#181824] rounded-2xl p-1.5 border border-slate-700/80">
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 flex items-center justify-center bg-surface rounded-full shadow-sm text-slate-700 active:scale-95 transition-transform"
+                    className="w-10 h-10 flex items-center justify-center bg-[#242436] rounded-xl shadow-sm text-white active:scale-95 transition-transform"
                   >
                     <Minus size={18} />
                   </button>
-                  <span className="font-bold w-4 text-center text-slate-900">{quantity}</span>
+                  <span className="font-black w-6 text-center text-white text-lg">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 flex items-center justify-center bg-primary rounded-full shadow-sm text-black active:scale-95 transition-transform"
+                    className="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-[#FF1E27] to-[#FF5C00] rounded-xl shadow-sm text-white active:scale-95 transition-transform"
                   >
                     <Plus size={18} />
                   </button>
                 </div>
-                <div className="text-2xl font-black text-slate-900">
+                <div className="text-2xl font-black text-white">
                   ${(product.price * quantity).toLocaleString('es-AR')}
                 </div>
               </div>
 
               <button 
                 onClick={handleAdd}
-                className="w-full bg-primary hover:bg-primary-hover text-black py-4 rounded-2xl font-black uppercase tracking-wide text-lg shadow-[0_5px_20px_-5px_rgba(255,184,0,0.4)] transition-all active:scale-[0.98]"
+                className="w-full bg-gradient-to-r from-[#FF1E27] via-[#DC2626] to-[#FF5C00] hover:brightness-110 text-white py-4 rounded-2xl font-black uppercase tracking-wide text-lg shadow-[0_5px_25px_rgba(255,30,39,0.45)] transition-all active:scale-[0.98]"
               >
-                Agregar al carrito
+                ⚡ Agregar al pedido
               </button>
             </div>
           </motion.div>

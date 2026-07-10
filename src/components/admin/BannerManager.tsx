@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { getEmpresaId } from '../../lib/getEmpresa';
 import { Trash2, Plus, Edit2 } from 'lucide-react';
 
 interface Banner {
@@ -19,10 +20,10 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
 
   useEffect(() => {
     async function init() {
-      const { data: empData } = await supabase.from('empresas').select('id').eq('slug', empresaSlug).maybeSingle();
-      if (empData) {
-        setEmpresaId(empData.id);
-        fetchBanners(empData.id);
+      const id = await getEmpresaId(empresaSlug);
+      if (id) {
+        setEmpresaId(id);
+        fetchBanners(id);
       }
     }
     init();

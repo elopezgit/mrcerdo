@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { getEmpresaId } from '../../lib/getEmpresa';
 import { Trash2, Edit, Plus } from 'lucide-react';
 
 interface Product {
@@ -33,10 +34,10 @@ export default function CatalogManager({ empresaSlug }: { empresaSlug: string })
 
   useEffect(() => {
     async function init() {
-      const { data: empData } = await supabase.from('empresas').select('id').eq('slug', empresaSlug).maybeSingle();
-      if (empData) {
-        setEmpresaId(empData.id);
-        fetchData(empData.id);
+      const id = await getEmpresaId(empresaSlug);
+      if (id) {
+        setEmpresaId(id);
+        fetchData(id);
       }
     }
     init();

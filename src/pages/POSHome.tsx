@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { getEmpresaId } from '../lib/getEmpresa';
 import { useCart } from '../lib/CartContext';
 import { Search, Plus, Minus, Trash2, Wallet, CreditCard, Send, Coffee, Utensils } from 'lucide-react';
 
@@ -42,21 +43,14 @@ export default function POSHome({ empresaSlug }: { empresaSlug: string }) {
   useEffect(() => {
     async function loadData() {
       try {
-        const { data: empData, error: empError } = await supabase
-          .from('empresas')
-          .select('id')
-          .eq('slug', empresaSlug)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        if (empError) throw empError;
-        if (!empData) throw new Error('Empresa no encontrada.');
+        const id = await getEmpresaId(empresaSlug);
+        if (!id) throw new Error('Empresa no encontrada.');
         
-        setEmpresaId(empData.id);
+        setEmpresaId(id);
 
         const [cats, prods] = await Promise.all([
-          supabase.from('categories').select('*').eq('empresa_id', empData.id),
-          supabase.from('products').select('*').eq('empresa_id', empData.id).eq('is_active', true)
+          supabase.from('categories').select('*').eq('empresa_id', id),
+          supabase.from('products').select('*').eq('empresa_id', id).eq('is_active', true)
         ]);
 
         if (cats.data) setCategories(cats.data);
@@ -114,7 +108,7 @@ export default function POSHome({ empresaSlug }: { empresaSlug: string }) {
 
       if (error) throw error;
 
-      alert('¡Pedido enviado a cocina!');
+      alert('¡Pedido enviado!');
       clearCart();
       setGlobalComment('');
       setShowSummaryModal(false);
@@ -244,7 +238,7 @@ export default function POSHome({ empresaSlug }: { empresaSlug: string }) {
                   
                   <input
                     type="text"
-                    placeholder="Ej: Sin sal, extra mayo..."
+                        placeholder="Ej: Notas del producto..."
                     value={item.notes || ''}
                     onChange={(e) => updateItemNotes(item.id, item.notes, e.target.value)}
                     className="w-full bg-white border border-slate-200 text-slate-600 rounded px-2 py-1 text-xs outline-none focus:border-primary mb-2 shadow-inner"
