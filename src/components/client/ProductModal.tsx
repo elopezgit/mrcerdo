@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus } from 'lucide-react';
-import { BrandLogo } from '../../utils/brandLogos';
 
 interface Product {
   id: string;
@@ -38,10 +37,10 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
 
   const getPlaceholder = (name: string) => {
     const n = name.toLowerCase();
-    if (n.includes('prote') || n.includes('whey')) return 'Ej: Sabor vainilla, mezclar con agua...';
-    if (n.includes('creatina')) return 'Ej: Micronizada, sin sabor...';
-    if (n.includes('pre') || n.includes('entreno')) return 'Ej: Sin cafeína, dosis recomendada...';
-    return 'Ej: Aclaraciones especiales...';
+    if (n.includes('chorizo')) return 'Ej: Bien sellado al vacío, listo para parrilla...';
+    if (n.includes('salame')) return 'Ej: Enviar entero o cortado en rodajas...';
+    if (n.includes('bondiola')) return 'Ej: Aclarar preferencia de pieza...';
+    return 'Ej: Aclaraciones especiales para tu pedido...';
   };
 
   return (
@@ -53,7 +52,7 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 z-[100] backdrop-blur-md"
+            className="fixed inset-0 bg-black/60 z-[100] backdrop-blur-sm"
           />
 
           <motion.div
@@ -61,85 +60,79 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 z-[101] bg-[#13131F] text-white rounded-t-3xl overflow-hidden flex flex-col max-h-[90vh] md:max-w-md md:mx-auto md:bottom-4 md:rounded-3xl shadow-2xl border border-red-500/30"
+            className="fixed bottom-0 left-0 right-0 z-[101] bg-white text-stone-900 rounded-t-3xl overflow-hidden flex flex-col max-h-[90vh] md:max-w-md md:mx-auto md:bottom-4 md:rounded-3xl shadow-2xl border border-stone-200"
           >
-            <div className="relative h-64 bg-black shrink-0">
+            <div className="relative h-60 bg-stone-900 shrink-0">
               <img 
-                src={product.image_url || `https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80`} 
+                src={product.image_url || '/img/Catalogo/bondiola.png'} 
                 alt={product.name}
-                className="w-full h-full object-cover opacity-50"
+                className="w-full h-full object-cover opacity-85"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#13131F] via-black/30 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/20 to-transparent"></div>
               
-              {/* Brand Official Overlay Seal */}
               <div className="absolute bottom-4 left-6 z-10 flex flex-col items-start gap-1">
-                <BrandLogo 
-                  brand={(() => {
-                    const match = product.name.match(/^\[(.*?)\]/);
-                    return match ? match[1].trim() : 'TITAN FUEL';
-                  })()} 
-                  size="lg" 
-                />
-                <div className="text-[11px] font-extrabold text-[#FF5C00] uppercase tracking-widest pl-1 drop-shadow-md">
-                  ★ 100% ORIGINAL & GARANTIZADO
+                <span className="bg-[#A12C25] text-white font-extrabold text-[10px] px-2.5 py-0.5 rounded uppercase tracking-widest shadow-sm">
+                  MR CERDO • OFICIAL
+                </span>
+                <div className="text-xs font-bold text-amber-300 uppercase tracking-wider drop-shadow-md mt-0.5">
+                  ★ 100% PURO CERDO SELECCIONADO
                 </div>
               </div>
 
               <button 
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2.5 bg-black/70 text-white rounded-full border border-white/20 backdrop-blur-md hover:bg-[#FF1E27] transition-colors z-20"
+                className="absolute top-4 right-4 p-2.5 bg-white/90 text-stone-900 rounded-full border border-stone-200 shadow-md hover:bg-[#A12C25] hover:text-white transition-colors z-20"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto hide-scrollbar p-6 bg-[#13131F]">
-              <h2 className="text-2xl font-black text-white mb-2 leading-tight">
-                {product.name.replace(/^\[.*?\]\s*/, '').trim()}
+            <div className="flex-1 overflow-y-auto hide-scrollbar p-6 bg-white">
+              <h2 className="text-2xl font-black text-stone-900 mb-2 leading-tight">
+                {product.name}
               </h2>
-              <p className="text-slate-300 leading-relaxed mb-6 text-sm">
-                {(product.description || '')
-                  .replace(/Lisa Mayorista \/ Suplementos AR\.?/gi, 'TITAN FUEL SUPLEMENTOS')
-                  .replace(/Suplementos AR\.?/gi, 'TITAN FUEL SUPLEMENTOS') ||
-                  'Producto de alta pureza y calidad garantizada en la línea oficial de TITAN FUEL SUPLEMENTOS.'}
+              <p className="text-stone-600 leading-relaxed mb-6 text-sm">
+                {product.description || 'Charcutería y embutidos artesanales elaborados con pura carne de cerdo de selección.'}
               </p>
 
               <div className="mb-4">
-                <label className="block text-xs font-black uppercase tracking-wider text-[#FF1E27] mb-2">Instrucciones Especiales</label>
+                <label className="block text-xs font-black uppercase tracking-wider text-[#A12C25] mb-2">
+                  Instrucciones o preferencias del pedido
+                </label>
                 <textarea 
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={getPlaceholder(product.name)}
-                  className="w-full bg-[#181824] border border-slate-700/80 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-[#FF1E27]/30 focus:border-[#FF1E27] outline-none transition-all resize-none h-20 placeholder:text-slate-500"
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-sm text-stone-900 focus:ring-2 focus:ring-[#A12C25]/20 focus:border-[#A12C25] outline-none transition-all resize-none h-20 placeholder:text-stone-400"
                 />
               </div>
             </div>
 
-            <div className="p-6 border-t border-slate-800 bg-[#13131F] shrink-0">
+            <div className="p-6 border-t border-stone-100 bg-stone-50/80 shrink-0">
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4 bg-[#181824] rounded-2xl p-1.5 border border-slate-700/80">
+                <div className="flex items-center gap-4 bg-white rounded-2xl p-1.5 border border-stone-200 shadow-sm">
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 flex items-center justify-center bg-[#242436] rounded-xl shadow-sm text-white active:scale-95 transition-transform"
+                    className="w-10 h-10 flex items-center justify-center bg-stone-100 hover:bg-stone-200 rounded-xl shadow-sm text-stone-800 active:scale-95 transition-all"
                   >
                     <Minus size={18} />
                   </button>
-                  <span className="font-black w-6 text-center text-white text-lg">{quantity}</span>
+                  <span className="font-black w-6 text-center text-stone-900 text-lg">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-[#FF1E27] to-[#FF5C00] rounded-xl shadow-sm text-white active:scale-95 transition-transform"
+                    className="w-10 h-10 flex items-center justify-center bg-[#A12C25] hover:bg-[#8B231E] rounded-xl shadow-sm text-white active:scale-95 transition-all"
                   >
                     <Plus size={18} />
                   </button>
                 </div>
-                <div className="text-2xl font-black text-white">
+                <div className="text-2xl font-black text-stone-900">
                   ${(product.price * quantity).toLocaleString('es-AR')}
                 </div>
               </div>
 
               <button 
                 onClick={handleAdd}
-                className="w-full bg-gradient-to-r from-[#FF1E27] via-[#DC2626] to-[#FF5C00] hover:brightness-110 text-white py-4 rounded-2xl font-black uppercase tracking-wide text-lg shadow-[0_5px_25px_rgba(255,30,39,0.45)] transition-all active:scale-[0.98]"
+                className="w-full bg-gradient-to-r from-[#A12C25] to-[#C93C32] hover:brightness-110 text-white py-4 rounded-2xl font-black uppercase tracking-wide text-base shadow-lg shadow-[#A12C25]/25 transition-all active:scale-[0.98]"
               >
                 ⚡ Agregar al pedido
               </button>

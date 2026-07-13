@@ -35,7 +35,7 @@ export default function KanbanBoard({ empresaSlug, role }: { empresaSlug: string
 
   useEffect(() => {
     async function init() {
-      const id = await getEmpresaId(empresaSlug);
+      const id = await getEmpresaId();
       if (id) {
         setEmpresaId(id);
         fetchOrders(id);

@@ -20,7 +20,7 @@ export default function BannerManager({ empresaSlug }: { empresaSlug: string }) 
 
   useEffect(() => {
     async function init() {
-      const id = await getEmpresaId(empresaSlug);
+      const id = await getEmpresaId();
       if (id) {
         setEmpresaId(id);
         fetchBanners(id);

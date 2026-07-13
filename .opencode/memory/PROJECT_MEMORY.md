@@ -1,30 +1,44 @@
-# PROJECT MEMORY
+# Memoria del Proyecto — MrCerdo OS
 
-## Resumen Ejecutivo
-App multi-tenant para pedidos de suplementos. Originalmente "TopeDeBar" (restaurante), migrado a "Suplementos AR". Cleanup de boilerplate AIBF completado.
+## Última sesión (13/07/2026)
+- **Tarea realizada**: Limpieza integral del proyecto — eliminación de legacy de suplementos deportivos, simplificación multi-tenant, actualización de memoria.
+- **Agentes involucrados**: Coordinator, Explore Agent
+- **Decisiones tomadas**:
+  - Simplificar getEmpresa.ts a solo MrCerdo (eliminar legacy slugs suplementosar/titanfuel)
+  - Eliminar brandLogos.tsx (dead code de marcas de suplementos)
+  - Eliminar filtros de marca y reemplazos de texto "Lisa Mayorista / Suplementos AR" en ClientHome y ProductModal
+  - Reemplazar fallback banners de Unsplash por banner local de MrCerdo
+  - Mantener AIBF framework completo (modules/, examples/, docs/, installer/)
+  - Simplificar multi-tenant a solo MrCerdo
 
-## Últimas Acciones (2026-07-10)
-- Identidad de marca actualizada a **TITAN FUEL SUPLEMENTOS** (basada en logo oficial):
-  - Colores corporativos: Rojo eléctrico (`#FF1E27`), Naranja llama (`#FF5C00`) y negro industrial deportivo.
-  - Logo copiado de `infoBase/logo.jfif` a `public/logo.jfif` y configurado como favicon y logo en Header.
-  - Datos de Contacto y Cobro configurados:
-    - **Teléfono / WhatsApp**: `3814751620` (con enlace directo `wa.me`)
-    - **Alias de Cobro (MercadoPago/Transferencia)**: `strong.gramlo`
-  - Banners actualizados al rubro de suplementación de alta gama (*Combustible de Titanes*, *Potencia tu Rendimiento*, *100% Pura Creatina & Whey*).
-- Eliminado boilerplate AIBF (~300+ archivos)
-- Reestructurado proyecto (sql/, assets limpios)
-- Procesado catálogo oficial PDF `Suplement Facts.xlsx - Lisa Mayorista (1).pdf` de `infoBase/`:
-  - Extraídos los **318 productos** exactos sin omitir ninguno
-  - Clasificados en **9 categorías oficiales** con fotos de alta calidad, precios exactos, códigos y descripciones
-  - Generado archivo SQL oficial [seed_suplementos.sql](file:///c:/Users/EDC/Desktop/AndresPedidos/sql/seed_suplementos.sql)
-- Actualizado [ClientHome.tsx](file:///c:/Users/EDC/Desktop/AndresPedidos/src/pages/ClientHome.tsx) con soporte para las 9 categorías, filtros por marca y palabras clave rápidas.
+## Estado actual
+- **Fase del proyecto**: Implementación / Mantenimiento
+- **Sprint actual**: Limpieza y puesta a punto
+- **Funcionalidades completadas**:
+  - Storefront cliente vista catálogo + carrito + pedido vía WhatsApp
+  - Admin dashboard con Kanban, POS, Analytics, Catalog Manager, Banner Manager
+  - Integración con Supabase (PostgreSQL)
+  - 9 productos artesanales en 4 categorías
+- **Bloqueos activos**: Ninguno
 
-## Decisiones Importantes
-- ADR-001: Migrar de restaurante a suplementos deportivos
-- ADR-002: Mantener multi-tenencia por slug (ya implementada)
-- ADR-003: Identidad visual deportiva de alta intensidad "Titan Fuel Suplementos"
-- ADR-004: Importación 100% fiel del catálogo mayorista Lisa Mayorista (318 productos en 9 categorías)
+## Historial de cambios recientes
+| Fecha | Cambio | Responsable | Estado |
+|---|---|---|---|
+| 13/07/2026 | Simplificación getEmpresa.ts (eliminar legacy supplements) | Coordinator | ✅ |
+| 13/07/2026 | Limpieza ClientHome.tsx (brands, Lisa Mayorista, Unsplash) | Coordinator | ✅ |
+| 13/07/2026 | Limpieza ProductModal.tsx (Lisa Mayorista) | Coordinator | ✅ |
+| 13/07/2026 | Eliminación brandLogos.tsx (dead code) | Coordinator | ✅ |
+| 13/07/2026 | Actualización PROJECT_PROFILE y PROJECT_MEMORY | Coordinator | ✅ |
 
-## Pendientes
-- Configurar RLS policies en Supabase
-- Desplegar a producción
+## Lecciones aprendidas
+- El proyecto arrastraba código legacy de un proyecto anterior de suplementos (Titan Fuel / Suplementos AR) que compartía la misma base Supabase
+- El brand filtering era irrelevante para MrCerdo (no hay marcas, son productos propios)
+- Los reemplazos de texto "Lisa Mayorista" ya no son necesarios porque la DB solo tiene datos de MrCerdo
+
+## Próximos pasos
+- [x] Limpieza de código legacy de suplementos
+- [x] Simplificación multi-tenant
+- [x] Actualización de memoria del proyecto
+- [ ] Agregar imágenes reales de los productos
+- [ ] Configurar tests automatizados
+- [ ] Pasar a producción

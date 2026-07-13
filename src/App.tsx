@@ -7,8 +7,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirigir la raíz a /titanfuel */}
-        <Route path="/" element={<Navigate to="/titanfuel" replace />} />
+        {/* Redirigir la raíz a /mrcerdo */}
+        <Route path="/" element={<Navigate to="/mrcerdo" replace />} />
         
         {/* Rutas Multi-Tenant (segmentadas por empresa) */}
         <Route path="/:empresaSlug" element={

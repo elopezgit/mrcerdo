@@ -44,7 +44,7 @@ export default function AdminDashboard() {
     
     // Bypass local / acceso rápido para administración y roles internos
     if (
-      (username === 'admin' && (password === 'admin' || password === 'admin123' || password === 'titanfuel')) ||
+      (username === 'admin' && (password === 'admin' || password === 'admin123' || password === 'mrcerdo')) ||
       (username === 'cocina' && password === 'cocina') || 
       (username === 'operador' && password === 'operador')
     ) {
@@ -213,7 +213,7 @@ export default function AdminDashboard() {
           >
             <LogOut size={16} /> Cerrar Sesión
           </button>
-          <p className="text-xs text-slate-500 text-center">Suplementos OS v1.0</p>
+          <p className="text-xs text-slate-500 text-center">MrCerdo OS v1.0</p>
         </div>
       </aside>
       

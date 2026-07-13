@@ -40,7 +40,7 @@ export default function AnalyticsDashboard({ empresaSlug }: { empresaSlug: strin
 
   useEffect(() => {
     async function init() {
-      const id = await getEmpresaId(empresaSlug);
+      const id = await getEmpresaId();
       if (id) {
         setEmpresaId(id);
         fetchData(id, timeFilter);

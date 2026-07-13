@@ -2,19 +2,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #FF1E27; /* Rojo eléctrico Titan Fuel */
-  --color-primary-hover: #E11D48;
-  --color-secondary: #FF5C00; /* Naranja llama de poder */
-  --color-surface: #12121A; /* Superficies metálicas oscuras */
-  --color-surface-card: #181824; /* Tarjetas de producto */
-  --color-background: #0A0A0F; /* Fondo negro obsidiana profundo */
+  --color-primary: #A12C25; /* Rojo Charcutería Artesanal */
+  --color-primary-hover: #8B231E;
+  --color-secondary: #D97706; /* Ámbar / Dorado Cálido */
+  --color-surface: #FFFFFF; /* Superficie blanca limpia */
+  --color-surface-card: #FFFFFF; /* Tarjetas de producto */
+  --color-background: #FAF8F5; /* Fondo marfil claro / PedidosYa Light */
 }
 
 @layer base {
   body {
-    @apply bg-background text-slate-100 font-sans antialiased selection:bg-primary/30 selection:text-white;
+    @apply bg-[#FAF8F5] text-stone-800 font-sans antialiased selection:bg-[#A12C25]/20 selection:text-stone-900;
     font-family: 'Outfit', sans-serif;
-    overscroll-behavior-y: none; /* Prevents pull-to-refresh bounce on mobile apps */
+    overscroll-behavior-y: none;
   }
   
   h1, h2, h3, h4, h5, h6, .font-display {

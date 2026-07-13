@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { getEmpresaId } from '../lib/getEmpresa';
+import { DEFAULT_CATEGORY_CHORIZOS, DEFAULT_CHORIZO_PRODUCTS, filterMrCerdoCategories, filterMrCerdoProducts } from '../lib/defaultCatalog';
 import { useCart } from '../lib/CartContext';
 import { Search, Plus, Minus, Trash2, Wallet, CreditCard, Send, Coffee, Utensils } from 'lucide-react';
 
@@ -43,7 +44,7 @@ export default function POSHome({ empresaSlug }: { empresaSlug: string }) {
   useEffect(() => {
     async function loadData() {
       try {
-        const id = await getEmpresaId(empresaSlug);
+        const id = await getEmpresaId();
         if (!id) throw new Error('Empresa no encontrada.');
         
         setEmpresaId(id);
@@ -53,8 +54,11 @@ export default function POSHome({ empresaSlug }: { empresaSlug: string }) {
           supabase.from('products').select('*').eq('empresa_id', id).eq('is_active', true)
         ]);
 
-        if (cats.data) setCategories(cats.data);
-        if (prods.data) setProducts(prods.data);
+        const loadedCats = filterMrCerdoCategories(cats.data || []);
+        setCategories(loadedCats);
+
+        const loadedProds = filterMrCerdoProducts(prods.data || []);
+        setProducts(loadedProds);
       } catch (err: any) {
         setError(err.message);
       } finally {

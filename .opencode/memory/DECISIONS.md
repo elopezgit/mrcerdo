@@ -1,0 +1,2 @@
+# DECISIONS
+Historial de decisiones.

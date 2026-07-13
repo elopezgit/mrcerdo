@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { getEmpresaId } from '../../lib/getEmpresa';
+import { filterMrCerdoCategories, filterMrCerdoProducts } from '../../lib/defaultCatalog';
 import { Trash2, Edit, Plus } from 'lucide-react';
 
 interface Product {
@@ -34,7 +35,7 @@ export default function CatalogManager({ empresaSlug }: { empresaSlug: string })
 
   useEffect(() => {
     async function init() {
-      const id = await getEmpresaId(empresaSlug);
+      const id = await getEmpresaId();
       if (id) {
         setEmpresaId(id);
         fetchData(id);
@@ -49,8 +50,8 @@ export default function CatalogManager({ empresaSlug }: { empresaSlug: string })
       supabase.from('products').select('*').eq('empresa_id', id).order('name')
     ]);
     
-    if (cats.data) setCategories(cats.data);
-    if (prods.data) setProducts(prods.data);
+    setCategories(filterMrCerdoCategories(cats.data || []));
+    setProducts(filterMrCerdoProducts(prods.data || []));
   };
 
   const handleSave = async (e: React.FormEvent) => {

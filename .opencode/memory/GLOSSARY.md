@@ -1,0 +1,2 @@
+# GLOSSARY
+Términos del negocio.
