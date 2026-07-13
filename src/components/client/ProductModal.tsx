@@ -60,7 +60,7 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 z-[101] bg-white text-stone-900 rounded-t-3xl overflow-hidden flex flex-col max-h-[90vh] md:max-w-md md:mx-auto md:bottom-4 md:rounded-3xl shadow-2xl border border-stone-200"
+            className="fixed bottom-0 left-0 right-0 z-[101] bg-white text-stone-900 rounded-t-3xl overflow-hidden flex flex-col max-h-[90vh] md:top-1/2 md:bottom-auto md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:rounded-3xl shadow-2xl border border-stone-200"
           >
             <div className="relative h-60 bg-stone-900 shrink-0">
               <img 

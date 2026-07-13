@@ -334,72 +334,74 @@ export default function ClientHome() {
     <div className="min-h-screen bg-[#FAF8F5] pb-28 font-sans text-stone-800">
       {/* 1. HERO HEADER */}
       <header className="bg-white/95 pt-6 pb-5 px-4 sticky top-0 z-40 border-b border-stone-200 backdrop-blur-xl shadow-sm">
-         <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-3.5">
-             <div className="w-13 h-13 bg-white rounded-2xl border-2 border-[#A12C25] flex items-center justify-center shadow-sm overflow-hidden shrink-0 transition-transform hover:scale-105">
-                <img src="/img/logo/logoMrCerdo.jpg" alt="Mr Cerdo Logo" className="w-full h-full object-cover" />
-             </div>
-             <div>
-               <h1 className="text-xl md:text-2xl font-black tracking-tight text-stone-900 font-display uppercase">
-                 MR CERDO
-               </h1>
-               <div className="flex items-center gap-2 text-xs font-semibold text-stone-600 mt-0.5">
-                 <span className="flex items-center gap-1 font-extrabold text-[#A12C25] uppercase tracking-wider">
-                   🔥 Embutidos Gourmet
-                 </span>
-                 <span className="text-stone-300">•</span>
-                 <span className="flex items-center gap-1 text-stone-500">
-                   <MapPin size={11} className="text-[#A12C25]"/> Envíos a todo el país
-                 </span>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-3.5">
+               <div className="w-13 h-13 bg-white rounded-2xl border-2 border-[#A12C25] flex items-center justify-center shadow-sm overflow-hidden shrink-0 transition-transform hover:scale-105">
+                  <img src="/img/logo/logoMrCerdo.jpg" alt="Mr Cerdo Logo" className="w-full h-full object-cover" />
                </div>
-             </div>
-          </div>
-          
-          <div className="flex items-center gap-2.5">
-            <a 
-              href={`https://wa.me/5493814751620?text=${encodeURIComponent('¡Hola Mr Cerdo! Quisiera hacer un pedido de embutidos artesanales.')}`}
-              target="_blank" 
-              rel="noreferrer"
-              title="Consultar por WhatsApp"
-              className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-300 flex items-center justify-center text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>
-            </a>
-          </div>
-        </div>
-
-        {/* Search Bar */}
-        <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-[#A12C25] transition-colors" size={18} />
-          <input 
-            type="text" 
-            placeholder="Buscar chorizos, salames, bondiolas, roquefort..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-stone-100 border border-stone-200 text-stone-900 rounded-2xl py-3.5 pl-12 pr-4 shadow-inner outline-none focus:bg-white focus:border-[#A12C25] focus:ring-2 focus:ring-[#A12C25]/15 transition-all text-sm placeholder:text-stone-400"
-          />
-        </div>
-
-        {activeOrderId && !searchQuery && (
-          <motion.button 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            onClick={() => setIsTrackerOpen(true)}
-            className="w-full mt-4 bg-amber-50 border border-amber-300 text-amber-800 py-3 px-4 rounded-xl flex items-center justify-between font-bold text-sm shadow-sm"
-          >
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-3 w-3 mr-1">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
-              </span>
-              Sigue tu pedido en vivo
+               <div>
+                 <h1 className="text-xl md:text-2xl font-black tracking-tight text-stone-900 font-display uppercase">
+                   MR CERDO
+                 </h1>
+                 <div className="flex items-center gap-2 text-xs font-semibold text-stone-600 mt-0.5">
+                   <span className="flex items-center gap-1 font-extrabold text-[#A12C25] uppercase tracking-wider">
+                     🔥 Embutidos Gourmet
+                   </span>
+                   <span className="text-stone-300">•</span>
+                   <span className="flex items-center gap-1 text-stone-500">
+                     <MapPin size={11} className="text-[#A12C25]"/> Envíos a todo el país
+                   </span>
+                 </div>
+               </div>
             </div>
-            <ChevronRight size={18} />
-          </motion.button>
-        )}
+            
+            <div className="flex items-center gap-2.5">
+              <a 
+                href={`https://wa.me/5493814751620?text=${encodeURIComponent('¡Hola Mr Cerdo! Quisiera hacer un pedido de embutidos artesanales.')}`}
+                target="_blank" 
+                rel="noreferrer"
+                title="Consultar por WhatsApp"
+                className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-300 flex items-center justify-center text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-[#A12C25] transition-colors" size={18} />
+            <input 
+              type="text" 
+              placeholder="Buscar chorizos, salames, bondiolas, roquefort..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-stone-100 border border-stone-200 text-stone-900 rounded-2xl py-3.5 pl-12 pr-4 shadow-inner outline-none focus:bg-white focus:border-[#A12C25] focus:ring-2 focus:ring-[#A12C25]/15 transition-all text-sm placeholder:text-stone-400"
+            />
+          </div>
+
+          {activeOrderId && !searchQuery && (
+            <motion.button 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              onClick={() => setIsTrackerOpen(true)}
+              className="w-full mt-4 bg-amber-50 border border-amber-300 text-amber-800 py-3 px-4 rounded-xl flex items-center justify-between font-bold text-sm shadow-sm"
+            >
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-3 w-3 mr-1">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                </span>
+                Sigue tu pedido en vivo
+              </div>
+              <ChevronRight size={18} />
+            </motion.button>
+          )}
+        </div>
       </header>
 
-      <main className="mt-2">
+      <main className="mt-2 max-w-6xl mx-auto w-full">
         {lastOrder.length > 0 && !searchQuery && (
           <section className="px-4 py-2 mt-2">
             <button 
@@ -587,7 +589,7 @@ export default function ClientHome() {
                   <span>{category.name}</span>
                 </h2>
                 
-                <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {categoryProducts.map((product, idx) => {
                     const qty = getProductQuantity(product.id);
                     
