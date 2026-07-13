@@ -598,3 +598,29 @@ export function filterMrCerdoProducts(prods: any[]): any[] {
   });
   return filtered.length > 0 ? filtered : DEFAULT_CHORIZO_PRODUCTS;
 }
+
+export function filterMrCerdoOrders(orders: any[]): any[] {
+  if (!orders || !Array.isArray(orders)) return [];
+  return orders.filter(o => {
+    if (!o.items || !Array.isArray(o.items) || o.items.length === 0) return true;
+    const hasUnrelatedItem = o.items.some((item: any) => {
+      const text = `${item.name || ''} ${item.description || ''}`.toLowerCase();
+      return /protein|proteína|whey|creatin|nutrition|lisa mayorista|suplement|pre-entreno|bcaa|glutamin|gainer|lbs|star nutrition|titan fuel/i.test(text);
+    });
+    return !hasUnrelatedItem;
+  });
+}
+
+export function filterMrCerdoBanners(banners: any[]): any[] {
+  const defaultBanners = [
+    { id: 'b1', image_url: '/img/banner/banner1.jpg', is_active: true, sort_order: 1 },
+    { id: 'b2', image_url: '/img/banner/banner2.jpg', is_active: true, sort_order: 2 },
+    { id: 'b3', image_url: '/img/banner/banner3.jpg', is_active: true, sort_order: 3 },
+  ];
+  if (!banners || !Array.isArray(banners) || banners.length === 0) return defaultBanners;
+  const filtered = banners.filter(b => {
+    const text = `${b.image_url || ''} ${b.link || ''}`.toLowerCase();
+    return !/titan|suplement|fitness|protein|creatin/i.test(text);
+  });
+  return filtered.length > 0 ? filtered : defaultBanners;
+}

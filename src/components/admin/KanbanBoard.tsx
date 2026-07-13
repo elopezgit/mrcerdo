@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { getEmpresaId } from '../../lib/getEmpresa';
+import { filterMrCerdoOrders } from '../../lib/defaultCatalog';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { ExternalLink } from 'lucide-react';
 import OrderDetailModal from './OrderDetailModal';
@@ -61,7 +62,7 @@ export default function KanbanBoard({ empresaSlug, role }: { empresaSlug: string
       .select('*')
       .eq('empresa_id', id)
       .order('created_at', { ascending: false });
-    if (data) setOrders(data);
+    setOrders(filterMrCerdoOrders(data || []));
   };
 
   const updateOrderStatus = (orderId: string, newStatus: string) => {
